@@ -1,0 +1,104 @@
+/*
+ * README
+ * mysql-plugin-is-mallinfo - MySQL Information Schema plugin that provide information
+ * about statistics for dynamic memory allocation of mysqld.
+ */
+
+====================================================================
+* Introduction
+====================================================================
+
+This is MySQL Information Schema plugin that provide information about
+statistics for dynamic memory allocation of mysqld.
+
+Very simple code using MySQL plugin API that MySQL 5.1 and up
+supports, and mallinfo function (malloc.h) of libc.
+
+for more infomation:
+see
+* MySQL plugin API
+http://dev.mysql.com/doc/refman/5.1/en/plugin-api.html
+* mallinfo of libc
+http://www.gnu.org/s/libc/manual/html_node/Statistics-of-Malloc.html
+
+
+====================================================================
+* Build and Install
+====================================================================
+
+1) extract files from an archive
+tar zxvf mysql-plugin-is-mallinfo-VERSION.tar.gz
+cd mysql-plugin-is-mallinfo-VERSION
+
+2) configure, make, amd make install
+./configure --with-mysql-config=/__path__/mysql_config --with-mysql-src=/__path-to-src__/mysql-5.1.30
+make
+sudo make install
+
+3) login to mysql, and install plugin
+mysql -uroot -p
+mysql> INSTALL PLUGIN MALLINFO SONAME 'is_mallinfo.so';
+
+====================================================================
+* Test
+====================================================================
+
+1) login to mysql
+mysql -uroot -p
+
+2) issue select query for information_schema.MALLINFO table
+mysql> use information_schema;
+mysql> show tables;
+
++---------------------------------------+
+| Tables_in_information_schema          |
++---------------------------------------+
+| CHARACTER_SETS                        |
+| COLLATIONS                            |
+| COLLATION_CHARACTER_SET_APPLICABILITY |
+| COLUMNS                               |
+| COLUMN_PRIVILEGES                     |
+| ENGINES                               |
+| EVENTS                                |
+| FILES                                 |
+| GLOBAL_STATUS                         |
+| GLOBAL_VARIABLES                      |
+| KEY_COLUMN_USAGE                      |
+| PARTITIONS                            |
+| PLUGINS                               |
+| PROCESSLIST                           |
+| PROFILING                             |
+| REFERENTIAL_CONSTRAINTS               |
+| ROUTINES                              |
+| SCHEMATA                              |
+| SCHEMA_PRIVILEGES                     |
+| SESSION_STATUS                        |
+| SESSION_VARIABLES                     |
+| STATISTICS                            |
+| TABLES                                |
+| TABLE_CONSTRAINTS                     |
+| TABLE_PRIVILEGES                      |
+| TRIGGERS                              |
+| USER_PRIVILEGES                       |
+| VIEWS                                 |
+| MALLINFO                              |
++---------------------------------------+
+29 rows in set (0.00 sec)
+
+
+mysql> select * from MALLINFO\G;
+*************************** 1. row ***************************
+            arena: 4575232
+          ordblks: 8
+           smblks: 0
+            hblks: 10
+           hblkhd: 22110208
+          usmblks: 0
+          fsmblks: 0
+         uordblks: 4256072
+         fordblks: 319160
+         keepcost: 310128
+     thread_count: 1
+thread_stack_size: 196608
+ estimated_memory: 26882048
+1 row in set (0.00 sec)
